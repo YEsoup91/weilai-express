@@ -1,0 +1,1359 @@
+openapi: 3.0.1
+info:
+  title: 味来速递 API 文档
+  description: 味来速递外卖系统接口文档
+  contact:
+    name: 味来速递团队
+    email: support@weilai.com
+  version: "1.0"
+servers:
+- url: http://localhost:8080/api
+  description: Generated server url
+paths:
+  /cart/{id}:
+    put:
+      tags:
+      - 购物车管理
+      summary: 更新购物车项
+      operationId: updateCart
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+    delete:
+      tags:
+      - 购物车管理
+      summary: 删除购物车项
+      operationId: deleteCart
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /api/user/update:
+    put:
+      tags:
+      - user-controller
+      operationId: updateUserInfo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /test/init-users:
+    post:
+      tags:
+      - 测试数据管理
+      summary: 初始化测试用户
+      operationId: initTestUsers
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: string
+  /orders:
+    get:
+      tags:
+      - 订单管理
+      summary: 获取订单列表
+      operationId: list
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListOrderListVO'
+    post:
+      tags:
+      - 订单管理
+      summary: 创建订单
+      operationId: createOrder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultOrderDetailVO'
+  /orders/{id}/pay:
+    post:
+      tags:
+      - 订单管理
+      summary: 支付订单
+      operationId: payOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}/grab:
+    post:
+      tags:
+      - 订单管理
+      summary: 骑手抢单
+      operationId: grabOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}/deliver:
+    post:
+      tags:
+      - 订单管理
+      summary: 商家发货/分配骑手
+      operationId: deliverOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}/confirm:
+    post:
+      tags:
+      - 订单管理
+      summary: 商家确认接单/制作完成
+      operationId: confirmOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}/complete:
+    post:
+      tags:
+      - 订单管理
+      summary: 骑手确认送达/完成订单
+      operationId: completeOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}/cancel:
+    post:
+      tags:
+      - 订单管理
+      summary: 取消订单
+      operationId: cancelOrder
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /init/users:
+    post:
+      tags:
+      - 数据初始化
+      summary: 初始化测试用户
+      operationId: initTestUsers_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultString'
+  /debug/reset-user-password:
+    post:
+      tags:
+      - 调试工具
+      summary: 重置用户密码
+      operationId: resetUserPassword
+      parameters:
+      - name: username
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: newPassword
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /debug/password:
+    post:
+      tags:
+      - 调试工具
+      summary: 生成密码哈希
+      operationId: generatePassword
+      parameters:
+      - name: password
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultString'
+  /debug/check-password:
+    post:
+      tags:
+      - 调试工具
+      summary: 验证密码
+      operationId: checkPassword
+      parameters:
+      - name: password
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: hash
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultBoolean'
+  /cart:
+    get:
+      tags:
+      - 购物车管理
+      summary: 获取购物车列表
+      operationId: getCart
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListCartItemVO'
+    post:
+      tags:
+      - 购物车管理
+      summary: 添加到购物车
+      operationId: addToCart
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cart'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /auth/register:
+    post:
+      tags:
+      - 认证管理
+      summary: 用户注册
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultUserVO'
+  /auth/login:
+    post:
+      tags:
+      - 认证管理
+      summary: 用户登录
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultMapStringObject'
+  /api/user/register:
+    post:
+      tags:
+      - user-controller
+      operationId: register_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultUserVO'
+  /api/user/login:
+    post:
+      tags:
+      - user-controller
+      operationId: login_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultUserVO'
+  /admin/role:
+    post:
+      tags:
+      - 管理员后台
+      summary: 分配角色
+      operationId: assignRole
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: object
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+  /orders/{id}:
+    get:
+      tags:
+      - 订单管理
+      summary: 获取订单详情
+      operationId: detail
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultOrderDetailVO'
+  /orders/rider/{riderId}/delivering:
+    get:
+      tags:
+      - 订单管理
+      summary: 获取骑手配送中订单
+      operationId: listDelivering
+      parameters:
+      - name: riderId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListMapStringObject'
+  /orders/rider/{riderId}/completed:
+    get:
+      tags:
+      - 订单管理
+      summary: 获取骑手已完成订单
+      operationId: listCompleted
+      parameters:
+      - name: riderId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListMapStringObject'
+  /orders/rider/available:
+    get:
+      tags:
+      - 订单管理
+      summary: 获取骑手可抢订单列表
+      operationId: listAvailableForRider
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListMapStringObject'
+  /orders/merchant/by-user/{userId}:
+    get:
+      tags:
+      - 订单管理
+      summary: 根据用户 ID 获取商家订单列表
+      operationId: listByMerchantUserId
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListMapStringObject'
+  /merchants:
+    get:
+      tags:
+      - 商家管理
+      summary: 获取商家列表
+      operationId: list_1
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListMerchantListVO'
+  /merchants/{id}:
+    get:
+      tags:
+      - 商家管理
+      summary: 获取商家详情
+      operationId: detail_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultMerchantListVO'
+  /dishes:
+    get:
+      tags:
+      - 菜品管理
+      summary: 获取菜品列表
+      operationId: list_2
+      parameters:
+      - name: merchantId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListDishVO'
+  /dishes/{id}:
+    get:
+      tags:
+      - 菜品管理
+      summary: 获取菜品详情
+      operationId: detail_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultDishVO'
+  /auth/info:
+    get:
+      tags:
+      - 认证管理
+      summary: 获取用户信息
+      operationId: getUserInfo
+      parameters:
+      - name: userId
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultUserVO'
+  /api/user/info/{userId}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserInfo_1
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultUserVO'
+  /admin/users:
+    get:
+      tags:
+      - 管理员后台
+      summary: 获取用户列表
+      operationId: getUserList
+      parameters:
+      - name: keyword
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListUser'
+  /admin/stats:
+    get:
+      tags:
+      - 管理员后台
+      summary: 获取统计数据
+      operationId: getStats
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultMapStringObject'
+  /admin/roles:
+    get:
+      tags:
+      - 管理员后台
+      summary: 获取角色列表
+      operationId: getRoleList
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultListRole'
+  /cart/clear/{userId}:
+    delete:
+      tags:
+      - 购物车管理
+      summary: 清空购物车
+      operationId: clearCart
+      parameters:
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/ResultVoid'
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        dishId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+          format: date-time
+        updateTime:
+          type: string
+          format: date-time
+    ResultVoid:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: object
+        timestamp:
+          type: integer
+          format: int64
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        password:
+          type: string
+        nickname:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        roleId:
+          type: integer
+          format: int64
+        status:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+          format: date-time
+        updateTime:
+          type: string
+          format: date-time
+        deleted:
+          type: integer
+          format: int32
+    OrderDTO:
+      required:
+      - deliveryAddress
+      - items
+      - receiverName
+      - receiverPhone
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        merchantId:
+          type: integer
+          format: int64
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemDTO'
+        deliveryAddress:
+          type: string
+        receiverName:
+          type: string
+        receiverPhone:
+          type: string
+        remark:
+          type: string
+        discountAmount:
+          type: number
+    OrderItemDTO:
+      type: object
+      properties:
+        dishId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        price:
+          type: number
+    OrderDetailVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        orderNo:
+          type: string
+        userId:
+          type: integer
+          format: int64
+        userName:
+          type: string
+        merchantId:
+          type: integer
+          format: int64
+        merchantName:
+          type: string
+        riderId:
+          type: integer
+          format: int64
+        riderName:
+          type: string
+        totalAmount:
+          type: number
+        deliveryFee:
+          type: number
+        discountAmount:
+          type: number
+        payAmount:
+          type: number
+        status:
+          type: integer
+          format: int32
+        paymentMethod:
+          type: integer
+          format: int32
+        paymentTime:
+          type: string
+          format: date-time
+        deliveryAddress:
+          type: string
+        receiverName:
+          type: string
+        receiverPhone:
+          type: string
+        remark:
+          type: string
+        createTime:
+          type: string
+          format: date-time
+        finishTime:
+          type: string
+          format: date-time
+        cancelReason:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemVO'
+    OrderItemVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        dishId:
+          type: integer
+          format: int64
+        dishName:
+          type: string
+        dishImage:
+          type: string
+        price:
+          type: number
+        quantity:
+          type: integer
+          format: int32
+        totalPrice:
+          type: number
+    ResultOrderDetailVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/OrderDetailVO'
+        timestamp:
+          type: integer
+          format: int64
+    ResultString:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: string
+        timestamp:
+          type: integer
+          format: int64
+    ResultBoolean:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: boolean
+        timestamp:
+          type: integer
+          format: int64
+    RegisterDTO:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        nickname:
+          type: string
+        phone:
+          pattern: "^1[3-9]\\d{9}$"
+          type: string
+        email:
+          type: string
+    ResultUserVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/UserVO'
+        timestamp:
+          type: integer
+          format: int64
+    UserVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        nickname:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        avatar:
+          type: string
+        roleId:
+          type: integer
+          format: int64
+        roleName:
+          type: string
+        roleCode:
+          type: string
+        status:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+          format: date-time
+    LoginDTO:
+      required:
+      - password
+      - username
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    ResultMapStringObject:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: object
+          additionalProperties:
+            type: object
+        timestamp:
+          type: integer
+          format: int64
+    OrderListVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        orderNo:
+          type: string
+        merchantId:
+          type: integer
+          format: int64
+        merchantName:
+          type: string
+        totalAmount:
+          type: number
+        deliveryFee:
+          type: number
+        payAmount:
+          type: number
+        status:
+          type: integer
+          format: int32
+        createTime:
+          type: string
+          format: date-time
+        itemCount:
+          type: integer
+          format: int32
+    ResultListOrderListVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderListVO'
+        timestamp:
+          type: integer
+          format: int64
+    ResultListMapStringObject:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: object
+        timestamp:
+          type: integer
+          format: int64
+    MerchantListVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        logo:
+          type: string
+        coverImage:
+          type: string
+        description:
+          type: string
+        address:
+          type: string
+        deliveryFee:
+          type: number
+        minOrderAmount:
+          type: number
+        rating:
+          type: number
+        salesCount:
+          type: integer
+          format: int32
+        status:
+          type: integer
+          format: int32
+    ResultListMerchantListVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantListVO'
+        timestamp:
+          type: integer
+          format: int64
+    ResultMerchantListVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/MerchantListVO'
+        timestamp:
+          type: integer
+          format: int64
+    DishVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        categoryId:
+          type: integer
+          format: int64
+        categoryName:
+          type: string
+        merchantId:
+          type: integer
+          format: int64
+        merchantName:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        image:
+          type: string
+        price:
+          type: number
+        originalPrice:
+          type: number
+        stock:
+          type: integer
+          format: int32
+        salesCount:
+          type: integer
+          format: int32
+        rating:
+          type: number
+        status:
+          type: integer
+          format: int32
+    ResultListDishVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/DishVO'
+        timestamp:
+          type: integer
+          format: int64
+    ResultDishVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/DishVO'
+        timestamp:
+          type: integer
+          format: int64
+    CartItemVO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        userId:
+          type: integer
+          format: int64
+        dishId:
+          type: integer
+          format: int64
+        quantity:
+          type: integer
+          format: int32
+        dishName:
+          type: string
+        dishImage:
+          type: string
+        price:
+          type: number
+        merchantId:
+          type: integer
+          format: int64
+    ResultListCartItemVO:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CartItemVO'
+        timestamp:
+          type: integer
+          format: int64
+    ResultListUser:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        timestamp:
+          type: integer
+          format: int64
+    ResultListRole:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        timestamp:
+          type: integer
+          format: int64
+    Role:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        roleCode:
+          type: string
+        roleName:
+          type: string
+        description:
+          type: string
+        createTime:
+          type: string
+          format: date-time
+        deleted:
+          type: integer
+          format: int32
+x-openapi:
+  x-markdownFiles: []
